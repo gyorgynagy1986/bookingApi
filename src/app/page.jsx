@@ -2,7 +2,7 @@ import CalendarUi from "../components/CalendarUi";
 
 async function getData() {
  
-  const res = await fetch("http://localhost:3000/api/services")
+  const res = await fetch("https://booking-api-phi.vercel.app/api/services")
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
  
