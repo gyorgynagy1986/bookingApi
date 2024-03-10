@@ -11,10 +11,20 @@ const serviceSchema = new Schema({
   startTime: { type: String, required: true }, // például "09:00"
   endTime: { type: String, required: true }, // például "17:00"
 },
-{   
-  toJSON: { virtuals: true},
-  toObject: { virtuals: true}
-});
+
+{
+  toJSON: { 
+    virtuals: true,
+    transform: function(doc, ret) {
+      delete ret.id; // Eltávolítja az 'id' mezőt a kimenetből
+      // Itt további transzformációkat végezhetsz, ha szükséges
+      return ret;
+    }
+  },
+  toObject: { virtuals: true }
+},
+
+);
 
 
 export default mongoose.models.Service ||

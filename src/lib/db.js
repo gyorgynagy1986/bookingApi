@@ -7,15 +7,26 @@ const connect = async () => {
     throw new Error("MONGO_URI environment variable is not set.");
   }
 
+  // readyState === 0: disconnected 
+  // readyState === 1: connected 
+  // readyState === 2: connecting 
+  // readyState === 3: disconnecting 
+
+  // Ellenőrzés, hogy a kapcsolat állapota már 'connected' (1) vagy 'connecting' (2) állapotban van-e
+  if (mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2) {
+    console.log("Already connected to MongoDB or connection is in progress.");
+    return;
+  }
+
   try {
-    await mongoose.connect(mongoUri);
+    await mongoose.connect(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log("Connected to MongoDB successfully");
   } catch (connectionError) {
-    if (connectionError instanceof Error) {
-      throw new Error("Connection failed: " + connectionError.message);
-    } else {
-      throw new Error("An unknown error occurred during MongoDB connection");
-    }
+    console.error("Connection failed: ", connectionError);
+    throw connectionError;
   }
 };
 

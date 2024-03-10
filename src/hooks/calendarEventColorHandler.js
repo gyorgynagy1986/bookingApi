@@ -5,6 +5,8 @@ import moment from "moment";
 
 // Egyedi hook a naptár események stílusainak kezelésére.
 const useEventStyles = (fullyBookedDays) => {
+
+
   // A szolgáltatás neve alapján generált színek cache-elése. A useMemo hook biztosítja, hogy a színtérkép csak egyszer jön létre és nem frissül minden renderelésnél.
   const serviceColors = useMemo(() => ({}), []);
 
@@ -14,7 +16,7 @@ const useEventStyles = (fullyBookedDays) => {
     for (let i = 0; i < str.length; i++) {
       hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
-    return `hsl(${hash % 360}, 50%, 70%)`;
+    return `hsl(${hash % 360}, 40%, 80%)`;
   };
 
   // Az esemény stílusát visszaadó függvény. Ez a függvény fut le minden egyes eseménynél, amikor a naptár komponens rendereli azokat.
@@ -28,13 +30,19 @@ const useEventStyles = (fullyBookedDays) => {
     const style = {
       backgroundColor: serviceColors[event.title], // Dinamikusan generált szín
       color: "black", // Cím színe
+      borderRadius: '0px',
+      fontSize: '13px',
+      height: '25px',
+      display: 'flex',
+      alignItems:'center'
     };
 
     // Ellenőrzi, hogy az adott esemény napja szerepel-e a teljesen lefoglalt napok között.
     const eventDate = moment(event.start).format("YYYY-MM-DD");
     if (fullyBookedDays[event.serviceId]?.includes(eventDate)) {
       style.backgroundColor = "red"; // Ha igen, beállítja a hátteret pirosra.
-      style.color = "white"; // A szöveg színét fehérre állítja.
+      style.color = "black"; // A szöveg színét fehérre állítja.
+      style.opacity = '.6'
     }
 
     // Visszaadja a stílus objektumot, amit a naptár komponens az adott eseményhez rendel.

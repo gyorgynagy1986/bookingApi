@@ -29,7 +29,6 @@ const useCalendarEvents = (bookedDaysData, servicesData) => {
     if (servicesData && Array.isArray(servicesData.services)) {
       // Események létrehozása minden szolgáltatási időszakra.
       const newEvents = servicesData.services.flatMap((service) => {
-        console.log(service)
         const serviceEvents = [];
         let currentDate = new Date(service.availableFrom);
         const endDate = new Date(service.availableTo);
@@ -48,17 +47,22 @@ const useCalendarEvents = (bookedDaysData, servicesData) => {
             parseInt(service.endTime.split(":")[1], 10),
             0,
           );
-          // Az esemény hozzáadása a tömbhöz, tartalmazza a szolgáltatás nevét, kezdő és befejező időpontot, azonosítót és leírást.
-          serviceEvents.push({
-            title: service.name + ' | Elérhető : ' + service.availableSlots + ' hely.',
+         // Az adott napra vonatkozó elérhető helyek számának meghatározása
+         const dayKey = currentDate.toISOString().split('T')[0];
+         const availableSlotsForDay = service.availableSlotsPerDay[dayKey];
+
+         // Az esemény hozzáadása a tömbhöz, tartalmazza a szolgáltatás nevét és az adott napra elérhető helyek számát a címben.
+         serviceEvents.push({
+            title: service.name,
             start,
             end,
+            availableSlots: availableSlotsForDay,
             serviceId: service._id,
             desc: service.description,
-          });
+         });
 
-          // A következő napra ugrunk.
-          currentDate.setDate(currentDate.getDate() + 1);
+         // A következő napra ugrunk.
+         currentDate.setDate(currentDate.getDate() + 1);
         }
 
         return serviceEvents;

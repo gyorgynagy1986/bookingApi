@@ -1,8 +1,10 @@
 "use client";
 
+import React, { useState } from 'react';
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import useSWR from "swr";
+import useSWR from 'swr'
 import moment from "moment";
+import EventModal from './modals/Modal';
 
 // CSS for calendar
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -17,33 +19,55 @@ import useCustomEventComponents from '@/hooks/managedCalendarDataInWeekAndDayVie
 moment.locale("hu");
 const localizer = momentLocalizer(moment);
 
-const fetcher = (url) => fetch(url).then((res) => res.json());
+const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
 const CalendarUi = () => {
- 
-  // Data fetching using SWR
-  const { data: bookedDaysData, error: bookedDaysError } = useSWR("api/getFullyBookedDays",fetcher,);
-  const { data: servicesData, error: servicesError } = useSWR("api/services",fetcher,);
-  
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+   // Data fetching using SWR
+  const { data: bookedDaysData, error: bookedDaysError } = useSWR("api/getFullyBookedDays",fetcher, {
+    //refreshInterval: 3000
+  }
+  );
+  const { data: servicesData, error: servicesError } = useSWR("api/services", fetcher, {
+    // revalidateOnFocus: true
+  });
+
   // Custom hooks 
-  const { events, fullyBookedDays } = useCalendarEvents(bookedDaysData,servicesData); // Display days in calendar
-  const eventPropGetter = useEventStyles(fullyBookedDays); // Mard red the fully booked days
-  const customComponents = useCustomEventComponents(); // Adding description of services in Week nad day view 
+  const { events, fullyBookedDays } = useCalendarEvents(bookedDaysData,servicesData); // Display the data in the calendar
+  const eventPropGetter = useEventStyles(fullyBookedDays); // Mark red the fully booked days
+  const customComponents = useCustomEventComponents(); // Adding description of services in the Week nad day view 
 
   if (bookedDaysError || servicesError) return <div>failed to load</div>;
   if (!bookedDaysData || !servicesData) return <div>loading...</div>;
+
+  
+
+  // Modal handler
+
+  const handleSelectEvent = (event) => {
+    console.log(event)
+    setSelectedEvent(event);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
 
   return (
     <>
       <Calendar
         localizer={localizer}
+        selectable={true}
+        onSelectEvent={handleSelectEvent}
         events={events}
         startAccessor="start"
         endAccessor="end"
-        // toolbar={false}
         components={customComponents}
         eventPropGetter={eventPropGetter}
-        // length={1}
         style={{ height: 1000 }}
         messages={{
           next: "Következő",
@@ -60,6 +84,12 @@ const CalendarUi = () => {
           Sun: "Vasárnap",
           // Add other keys here to customize all text
         }}
+      />
+       {/* Modális dialógus az esemény részleteivel */}
+       <EventModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        event={selectedEvent}
       />
     </>
   );
