@@ -68,7 +68,7 @@ const CalendarUi = () => {
         endAccessor="end"
         components={customComponents}
         eventPropGetter={eventPropGetter}
-        style={{ height: '100vh' }}
+        style={{ height: '100dvh' }}
         messages={{
           next: "Következő",
           previous: "Előző",
