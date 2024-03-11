@@ -7,9 +7,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async () => {
   await connect();
-
+  
   try {
-    const services = await Service.find({}); // Minden szolgáltatás lekérdezése
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+
+    const services = await Service.find({
+      availableTo: { $gte: today },
+    });
+
+    console.log(services)
 
     const servicesWithAvailableSlots = await Promise.all(
       services.map(async (service) => {
