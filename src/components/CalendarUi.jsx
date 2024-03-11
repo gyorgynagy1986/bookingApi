@@ -21,7 +21,7 @@ const localizer = momentLocalizer(moment);
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
-const CalendarUi = ({servicesData}) => {
+const CalendarUi = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -32,24 +32,23 @@ const CalendarUi = ({servicesData}) => {
   }
   );
   
-  //const { data: servicesData, error: servicesError } = useSWR("api/services", fetcher, {
-  //  // revalidateOnFocus: true
-  //});
+  const { data: servicesData, error: servicesError } = useSWR("api/services", fetcher, {
+    // revalidateOnFocus: true
+  });
 
   // Custom hooks 
   const { events, fullyBookedDays } = useCalendarEvents(bookedDaysData,servicesData); // Display the data in the calendar
   const eventPropGetter = useEventStyles(fullyBookedDays); // Mark red the fully booked days
   const customComponents = useCustomEventComponents(); // Adding description of services in the Week nad day view 
 
-  // if (bookedDaysError || servicesError) return <div>failed to load</div>;
-  // if (!bookedDaysData || !servicesData) return <div>loading...</div>;
+   if (bookedDaysError || servicesError) return <div>failed to load</div>;
+   if (!bookedDaysData || !servicesData) return <div>loading...</div>;
 
   
 
   // Modal handler
 
   const handleSelectEvent = (event) => {
-    console.log(event)
     setSelectedEvent(event);
     setModalOpen(true);
   };
@@ -69,7 +68,7 @@ const CalendarUi = ({servicesData}) => {
         endAccessor="end"
         components={customComponents}
         eventPropGetter={eventPropGetter}
-        style={{ height: 1000 }}
+        style={{ height: '100vh' }}
         messages={{
           next: "Következő",
           previous: "Előző",

@@ -1,26 +1,25 @@
 import CalendarUi from "../components/CalendarUi";
 
-async function getData() {
- 
-  const res = await fetch("https://booking-api-phi.vercel.app/api/services")
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
- 
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error('Failed to fetch data')
-  }
- 
-  return res.json()
-}
+//async function getData() {
+// 
+//  const res = await fetch("http://localhost:3000/api/services")
+//  // The return value is *not* serialized
+//  // You can return Date, Map, Set, etc.
+// 
+//  if (!res.ok) {
+//    // This will activate the closest `error.js` Error Boundary
+//    throw new Error('Failed to fetch data')
+//  }
+// 
+//  return res.json()
+//}
 
-export default async  function Home() {
+export default async  function Home() { 
+// const data = await getData()
   
-const data = await getData()
-  
-  return (
+return (
     <div>
-      <CalendarUi servicesData={data} />
+     <CalendarUi />
     </div>
   );
 }
