@@ -1,8 +1,9 @@
-import React from 'react'
+import PostAnAppoitement from '../../components/dashboard/postAnAppoitement/postAnAppoitement'
 
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+      </div>
   )
 }
 

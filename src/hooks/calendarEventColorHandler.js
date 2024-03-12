@@ -1,11 +1,26 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import moment from "moment";
 
 // Egyedi hook a naptár események stílusainak kezelésére.
 const useEventStyles = (fullyBookedDays) => {
 
+const [fullyBookedDayManage, setFullyBookedDaysManage] = useState({});
+
+  useEffect(() => { 
+    if (fullyBookedDays && Array.isArray(fullyBookedDays.fullyBookedDays)) {
+        const bookedDays = fullyBookedDays.fullyBookedDays.reduce((acc, item) => {
+            
+            if (!acc[item.serviceId]) {
+              acc[item.serviceId] = [];
+            }
+            acc[item.serviceId].push(item.date);
+            return acc;
+          }, {});
+          setFullyBookedDaysManage(bookedDays);
+        }
+      }, [fullyBookedDays])
 
   // A szolgáltatás neve alapján generált színek cache-elése. A useMemo hook biztosítja, hogy a színtérkép csak egyszer jön létre és nem frissül minden renderelésnél.
   const serviceColors = useMemo(() => ({}), []);
@@ -39,12 +54,11 @@ const useEventStyles = (fullyBookedDays) => {
 
     // Ellenőrzi, hogy az adott esemény napja szerepel-e a teljesen lefoglalt napok között.
     const eventDate = moment(event.start).format("YYYY-MM-DD");
-    if (fullyBookedDays[event.serviceId]?.includes(eventDate)) {
+    if (fullyBookedDayManage[event.serviceId]?.includes(eventDate)) {
       style.backgroundColor = "red"; // Ha igen, beállítja a hátteret pirosra.
       style.color = "black"; // A szöveg színét fehérre állítja.
       style.opacity = '.6'
     }
-
     // Visszaadja a stílus objektumot, amit a naptár komponens az adott eseményhez rendel.
     return { style };
   };

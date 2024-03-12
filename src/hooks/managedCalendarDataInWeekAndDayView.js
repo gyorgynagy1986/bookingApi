@@ -4,7 +4,7 @@ const useCustomEventComponents = () => {
   // Az EventWithDescription komponens definíciója
   const EventWithDescription = ({ event }) => (
     <div style={{ display: "flex", gap: "1rem" }}>
-      <strong>{event.title}</strong>
+      <p>{event.title}</p>
       <div>{event.desc}</div> {/* Esemény leírása */}
       <div>{event.availableSlots}</div> {/* Esemény leírása */}
     </div>
@@ -12,7 +12,7 @@ const useCustomEventComponents = () => {
 
   const EventWithDescriptionMain = ({ event }) => (
     <div style={{ display: "flex", gap: "1rem" }}>
-      <strong>{event.title} {':  elérhető helyek: '}{event.availableSlots}</strong>
+      <p>{event.title} {':  elérhető helyek: '}{event.availableSlots}</p>
     </div>
   );
 

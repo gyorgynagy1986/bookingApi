@@ -10,14 +10,12 @@ export const GET = async () => {
   
   try {
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); 
+    // const today = new Date();
+    // today.setHours(0, 0, 0, 0); 
 
     const services = await Service.find({
-      availableTo: { $gte: today },
+   //   availableFrom: { $gte: today },
     });
-
-    console.log(services)
 
     const servicesWithAvailableSlots = await Promise.all(
       services.map(async (service) => {

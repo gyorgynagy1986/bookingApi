@@ -9,8 +9,23 @@ const appointmentSchema = new Schema(
       ref: "User",
       required: true,
     },
+    userName: {
+      type: String,
+      ref: "User",
+      required: true,
+    },
+    userEmail: {
+      type: String,
+      ref: "User",
+      required: true,
+    },
     service: {
       type: Schema.Types.ObjectId,
+      ref: "Service",
+      required: true,
+    },
+    serviceName: {
+      type: String,
       ref: "Service",
       required: true,
     },
