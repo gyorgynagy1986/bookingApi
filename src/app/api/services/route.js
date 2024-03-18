@@ -10,74 +10,76 @@ export const GET = async () => {
   await connect();
   
   try {
-
     // const today = new Date();
-    // today.setHours(0, 0, 0, 0); 
+    // today.setHours(0, 0, 0, 0);
 
     const services = await Service.find({
-   //   availableFrom: { $gte: today },
+      // availableFrom: { $gte: today },
     });
 
-    const servicesWithAvailableSlots = await Promise.all(
-      services.map(async (service) => {
-        // Kiszámoljuk az összes napot az időintervallumban
-        const daysInRange = getDaysArray(service.availableFrom, service.availableTo);
+    const servicesWithAvailableSlots = await Promise.all(services.map(async (service) => {
+      const bookingsAggregation = await Appointment.aggregate([
+        // Csak azokat a foglalásokat szűrjük, amik a szolgáltatáshoz tartoznak
+        { $match: { service: service._id } },
+        // Csoportosítás dátum szerint, hogy megtudjuk hány foglalás van minden egyes napon
+        {
+          $group: {
+            _id: {
+              year: { $year: "$date" },
+              month: { $month: "$date" },
+              day: { $dayOfMonth: "$date" },
+            },
+            bookedSlots: { $sum: 1 },
+          },
+        },
+        // Formázzuk az adatokat, hogy megkapjuk a kívánt kimenetet
+        {
+          $project: {
+            _id: 0,
+            date: {
+              $concat: [
+                { $toString: "$_id.year" }, "-",
+                { $cond: [{ $lt: ["$_id.month", 10] }, "0", ""] },
+                { $toString: "$_id.month" }, "-",
+                { $cond: [{ $lt: ["$_id.day", 10] }, "0", ""] },
+                { $toString: "$_id.day" }
+              ],
+            },
+            bookedSlots: 1,
+          },
+        },
+        // Rendezzük dátum szerint
+        { $sort: { date: 1 } },
+      ]);
 
+      // Naponta elérhető helyek kiszámítása
+      const availableSlotsPerDay = {};
+      
+      bookingsAggregation.forEach(booking => {
+        const dateKey = booking.date; // "YYYY-MM-DD"
+        availableSlotsPerDay[dateKey] = service.maxSlots - booking.bookedSlots;
+      });
 
-        const availableSlotsPerDay = {};
-
-        await Promise.all(
-          daysInRange.map(async (day) => {
-            // Foglalások számának meghatározása az adott napon
-            const bookingsForDay = await Appointment.find({
-              service: service._id,
-              date: {
-                $gte: new Date(day),
-                $lt: new Date(new Date(day).setDate(new Date(day).getDate() +1)),
-              },
-
-            });
-
-            const bookedSlots = bookingsForDay.length;
-            const availableSlots = service.maxSlots - bookedSlots;
-
-            // Naponta elérhető helyek hozzáadása az objektumhoz
-            availableSlotsPerDay[day.toISOString().split('T')[0]] = availableSlots;
-          })
-        );
-
-
-        return {
-          ...service.toObject(),
-          availableSlotsPerDay,
-        };
-      })
-    );
+      return {
+        ...service.toObject(),
+        availableSlotsPerDay,
+      };
+    }));
 
     return new NextResponse(JSON.stringify({ services: servicesWithAvailableSlots }), { status: 200 });
   } catch (error) {
     console.error("Error processing request:", error);
-    return new NextResponse(JSON.stringify({ error: "Error processing request" }), { status: 500 });
+    return new NextResponse(JSON.stringify({ error: error }), { status: 500 });
   }
 };
 
-// Segédfüggvény az időintervallum összes napjának meghatározásához
-function getDaysArray(start, end) {
-  let arr = [];
-  let dt = new Date(start);
-  end = new Date(end);
-
-  while (dt <= end) {
-    arr.push(new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate())));
-    dt.setUTCDate(dt.getUTCDate() + 1);
-  }
-  return arr;
-}
 
 
 export const POST = async (req, res) => {
   try {
     const body = await req.json();
+
+    console.log(body)
     
  // Az időzóna konstansok definiálása
     const LOCAL_TIMEZONE = 'Europe/Budapest';
@@ -104,10 +106,10 @@ export const POST = async (req, res) => {
             
       };
 
-
     const newService = new Service(newServiceData);
 
     await connect();
+    
     await newService.save();
 
     return new NextResponse(
@@ -118,7 +120,7 @@ export const POST = async (req, res) => {
     );
   } catch (error) {
     return new NextResponse(
-      JSON.stringify({ error: "Error processing request" }),
+      JSON.stringify({ error: error }),
       { status: 500 },
     );
   }

@@ -1,16 +1,11 @@
 "use client";
 
 import React, {useState} from 'react';
-import { Calendar, dateFnsLocalizer  } from "react-big-calendar";
+import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { useBookings } from '@/context/bookingContext'; // Feltételezve, hogy a BookingContext fájlodban van definiálva
 import useCalendarEvents from '@/hooks/useCalendarEvents';
 import EventModal from './modals/Modal';
-import parse from 'date-fns/parse'
-import format from 'date-fns/format'
-import startOfWeek from 'date-fns/startOfWeek'
-import hu from 'date-fns/locale/hu'
-import getDay from 'date-fns/getDay'
 
 // CSS for calendar
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -20,17 +15,8 @@ import "moment/locale/hu";
  import useEventStyles from "@/hooks/calendarEventColorHandler";
  import useCustomEventComponents from '@/hooks/managedCalendarDataInWeekAndDayView';
 
- const locales = {
-  'hu': hu,
-}
-
- const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-})
+moment.locale("hu");
+const localizer = momentLocalizer(moment);
 
 const CalendarUi = () => {
   const { services, fullyBookedDays } = useBookings()
@@ -56,32 +42,7 @@ const CalendarUi = () => {
   const eventPropGetter = useEventStyles(fullyBookedDays, services);
   const customComponents = useCustomEventComponents();
   
- // function generateFlexibleRecurringEvents(start, end, repeat = 'daily', daysOfWeek = [] ) {
- //   let events2 = [];
- //   let currentDate = moment(start);
- // 
- //   while (currentDate <= moment(end)) {
- //     if (repeat === 'daily' || 
- //         (repeat === 'weekly' && daysOfWeek.includes(currentDate.day()))) {
- //       events2.push({
- //         title: repeat === 'daily' ? 'Napi ismétlődő esemény' : 'Heti ismétlődő esemény',
- //         start,
- //         end,
- //         allDay: true,
- //       });
- //     }
- //     currentDate.add(1, 'days');
- //   }
- // 
- //   return events2;
- // }
-  
-  // Minden napi esemény generálása
-  // const dailyEvents = generateFlexibleRecurringEvents('2024-01-01', '2024-12-31');
-  
-  // Csak bizonyos napokon (pl. hétfőn és szerdán) ismétlődő események generálása
-  // Hétfő = 1, szerda = 3
-  // const weeklyEventsOnSpecificDays = generateFlexibleRecurringEvents(events.start, events.end, 'weekly', []);
+console.log(events)
 
 
   return (

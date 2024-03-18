@@ -4,27 +4,33 @@ import moment from 'moment-timezone';
 
 const useCalendarEvents = () => {
   const { services } = useContext(BookingContext);
+  
   const [events, setEvents] = useState([]);
 
+  console.log(events)
 
   useEffect(() => {
     const tempEvents = [];
 
     services.forEach(service => {
-      Object.entries(service.availableSlotsPerDay).forEach(([date, availableSlots]) => {
-        // Itt állítjuk be a magyar időzónát
+      // Generálj egy objektumot minden napra az intervallumban a maxSlots értékkel
+      const daysRange = generateDaysRange(service.availableFrom, service.availableTo, service.maxSlots);
+      // Egyesítsd az alapértelmezett napokat az availableSlotsPerDay adataival
+      const fullAvailableSlotsPerDay = { ...daysRange, ...service.availableSlotsPerDay };
+
+      Object.entries(fullAvailableSlotsPerDay).forEach(([date, availableSlots]) => {
         const timeZone = 'Europe/Budapest';
-        let startDateTime = moment.tz(date + 'T' + service.startTime, 'Europe/Budapest').toDate();
+        let startDateTime = moment.tz(date + 'T' + service.startTime, timeZone).toDate();
         let endDateTime = moment.tz(date + 'T' + service.endTime, timeZone).toDate();
 
         const dayEvent = {
-          title: service.name ,
+          title: service.name,
           start: startDateTime,
           end: endDateTime,
           date: date,
           startTime: service.startTime,
           endTime: service.endTime,
-          allDay: false, // Ha szeretnéd, hogy az egész napos eseményként ne jelenjen meg
+          allDay: false,
           serviceId: service._id,
           desc: service.description,
           availableSlots,
@@ -41,49 +47,19 @@ const useCalendarEvents = () => {
   return events;
 };
 
+// Generál egy objektumot minden napra a megadott intervallumban a maxSlots értékkel
+function generateDaysRange(start, end, maxSlots) {
+  let days = {};
+  let currentDate = moment(start);
+  const stopDate = moment(end);
+
+  while (currentDate <= stopDate) {
+    days[currentDate.format('YYYY-MM-DD')] = maxSlots;
+    currentDate = currentDate.add(1, 'days');
+  }
+
+  return days;
+}
 export default useCalendarEvents;
 
 
-
-//import { useContext, useState, useEffect } from "react";
-//import { BookingContext } from '@/context/bookingContext';
-//import moment from 'moment';
-//
-//const useCalendarEvents = () => {
-//  const { services } = useContext(BookingContext);
-//  const [events, setEvents] = useState([]);
-//
-//console.log(services)
-//
-//  useEffect(() => {
-//    const tempEvents = [];
-//
-//    services.forEach(service => {
-//      Object.entries(service.availableSlotsPerDay).forEach(([date, availableSlots]) => {
-//        let startDateTime = moment(date + 'T' + service.startTime).toDate();
-//        let endDateTime = moment(date + 'T' + service.endTime).toDate();
-//    
-//        console.log(startDateTime)
-//        console.log(endDateTime)
-//
-//        const dayEvent = {
-//          title: `${service.name} (${availableSlots} hely elérhető)`,
-//          start: startDateTime,
-//          end: endDateTime,
-//          allDay: false,
-//          serviceId: service._id,
-//          desc: service.description,
-//          availableSlots
-//        };
-//    
-//        tempEvents.push(dayEvent);
-//      });
-//    });
-//
-//    setEvents(tempEvents);
-//  }, [services]);
-//
-//  return events;
-//};
-//
-//export default useCalendarEvents;
