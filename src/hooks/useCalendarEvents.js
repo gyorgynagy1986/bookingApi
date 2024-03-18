@@ -1,48 +1,89 @@
 import { useContext, useState, useEffect } from "react";
 import { BookingContext } from '@/context/bookingContext';
+import moment from 'moment-timezone';
 
 const useCalendarEvents = () => {
-  const { services, fullyBookedDays, appointments} = useContext(BookingContext);
-
-  
+  const { services } = useContext(BookingContext);
   const [events, setEvents] = useState([]);
 
 
   useEffect(() => {
-    const newEvents = services?.flatMap(service => {
-      const serviceEvents = [];
-      let currentDate = new Date(service.availableFrom);
-      const endDate = new Date(service.availableTo);
+    const tempEvents = [];
 
-      while (currentDate <= endDate) {
-        const dayKey = currentDate.toISOString().split('T')[0];
-        const availableSlotsForDay = service.availableSlotsPerDay[dayKey] ?? 0;
-        
-     //   if (availableSlotsForDay > 0) {   // Ez nem jeleníti meg a lefoglalt napokat 
-          const start = new Date(currentDate.setHours(parseInt(service.startTime.split(":")[0]), parseInt(service.startTime.split(":")[1])));
-          const end = new Date(currentDate.setHours(parseInt(service.endTime.split(":")[0]), parseInt(service.endTime.split(":")[1])));
+    services.forEach(service => {
+      Object.entries(service.availableSlotsPerDay).forEach(([date, availableSlots]) => {
+        // Itt állítjuk be a magyar időzónát
+        const timeZone = 'Europe/Budapest';
+        let startDateTime = moment.tz(date + 'T' + service.startTime, 'Europe/Budapest').toDate();
+        let endDateTime = moment.tz(date + 'T' + service.endTime, timeZone).toDate();
 
-          serviceEvents.push({
-            title: `${service.name} (${availableSlotsForDay} hely elérhető)`,
-            start,
-            end,
-            allDay: false,
-            serviceId: service._id,
-            desc: service.description,
-            availableSlots: availableSlotsForDay
-          });
- //        }
+        const dayEvent = {
+          title: service.name ,
+          start: startDateTime,
+          end: endDateTime,
+          date: date,
+          startTime: service.startTime,
+          endTime: service.endTime,
+          allDay: false, // Ha szeretnéd, hogy az egész napos eseményként ne jelenjen meg
+          serviceId: service._id,
+          desc: service.description,
+          availableSlots,
+          recurrence: service.recurrence
+        };
 
-        currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
-      }
-
-      return serviceEvents;
+        tempEvents.push(dayEvent);
+      });
     });
 
-    setEvents(newEvents ?? []);
-  }, [services, fullyBookedDays, appointments]);
+    setEvents(tempEvents);
+  }, [services]);
 
   return events;
 };
 
 export default useCalendarEvents;
+
+
+
+//import { useContext, useState, useEffect } from "react";
+//import { BookingContext } from '@/context/bookingContext';
+//import moment from 'moment';
+//
+//const useCalendarEvents = () => {
+//  const { services } = useContext(BookingContext);
+//  const [events, setEvents] = useState([]);
+//
+//console.log(services)
+//
+//  useEffect(() => {
+//    const tempEvents = [];
+//
+//    services.forEach(service => {
+//      Object.entries(service.availableSlotsPerDay).forEach(([date, availableSlots]) => {
+//        let startDateTime = moment(date + 'T' + service.startTime).toDate();
+//        let endDateTime = moment(date + 'T' + service.endTime).toDate();
+//    
+//        console.log(startDateTime)
+//        console.log(endDateTime)
+//
+//        const dayEvent = {
+//          title: `${service.name} (${availableSlots} hely elérhető)`,
+//          start: startDateTime,
+//          end: endDateTime,
+//          allDay: false,
+//          serviceId: service._id,
+//          desc: service.description,
+//          availableSlots
+//        };
+//    
+//        tempEvents.push(dayEvent);
+//      });
+//    });
+//
+//    setEvents(tempEvents);
+//  }, [services]);
+//
+//  return events;
+//};
+//
+//export default useCalendarEvents;

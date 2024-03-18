@@ -1,6 +1,7 @@
 import connect from "../../../lib/db";
 import Service from "../../../models/Service";
 import Appointment from "@/models/Appointment";
+import moment from 'moment-timezone';
 
 import { NextRequest, NextResponse } from "next/server";
 
@@ -21,6 +22,8 @@ export const GET = async () => {
       services.map(async (service) => {
         // Kiszámoljuk az összes napot az időintervallumban
         const daysInRange = getDaysArray(service.availableFrom, service.availableTo);
+
+
         const availableSlotsPerDay = {};
 
         await Promise.all(
@@ -30,8 +33,9 @@ export const GET = async () => {
               service: service._id,
               date: {
                 $gte: new Date(day),
-                $lt: new Date(new Date(day).setDate(new Date(day).getDate() + 1)),
+                $lt: new Date(new Date(day).setDate(new Date(day).getDate() +1)),
               },
+
             });
 
             const bookedSlots = bookingsForDay.length;
@@ -59,16 +63,49 @@ export const GET = async () => {
 
 // Segédfüggvény az időintervallum összes napjának meghatározásához
 function getDaysArray(start, end) {
-  for(var arr=[], dt=new Date(start); dt<=end; dt.setDate(dt.getDate()+1)){
-    arr.push(new Date(dt));
+  let arr = [];
+  let dt = new Date(start);
+  end = new Date(end);
+
+  while (dt <= end) {
+    arr.push(new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate())));
+    dt.setUTCDate(dt.getUTCDate() + 1);
   }
   return arr;
 }
 
-export const POST = async (req = NextRequest, res) => {
+
+export const POST = async (req, res) => {
   try {
     const body = await req.json();
-    const newService = new Service(body);
+    
+ // Az időzóna konstansok definiálása
+    const LOCAL_TIMEZONE = 'Europe/Budapest';
+    const UTC_TIMEZONE = 'UTC';
+
+      // A dátumok átalakítása a helyi időzóna napjának kezdetére és végére
+      const convertToLocalDayStartEnd = (date, isStartOfDay) => {
+          const formattedDate = moment.tz(date, LOCAL_TIMEZONE);
+          if (isStartOfDay) {
+              return formattedDate.startOf('day').tz(UTC_TIMEZONE, true).format();
+          } else {
+              return formattedDate.endOf('day').tz(UTC_TIMEZONE, true).format();
+          }
+      };
+
+      // Konvertálás és kiíratás
+      const availableFromUTC = convertToLocalDayStartEnd(body.availableFrom, true);
+      const availableToUTC = convertToLocalDayStartEnd(body.availableTo, false);
+
+      const newServiceData = {
+          ...body,
+            availableFrom: availableFromUTC, // '00:00:00.000Z'
+            availableTo: availableToUTC,     // '23:59:59.999Z'
+            
+      };
+
+
+    const newService = new Service(newServiceData);
 
     await connect();
     await newService.save();

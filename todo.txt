@@ -2,7 +2,10 @@ Done  : ✅
 
 📝 Ne lehessen foglalni visszamenőleg (backEnd szinten)
 📝 PopoUp ablak a sikeres foglalásról
-📝 Színek legyen konzistensel! 
+📝 Event-ből visszakapott time zone localizálása
+📝 Színek legyen konzistensel!   ✅
+📝 Time picker bug javítás
+
 
 
 MONGO_URI = mongodb+srv://gyorgynagy1986:ADLqiQ7lqZ2DuBfr@cluster0.zorarry.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0

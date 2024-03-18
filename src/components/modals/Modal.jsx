@@ -10,7 +10,15 @@ function EventModal({ open, onClose, event }) {
     onClose(); // Bezárás a szülő komponensben
   };
   // Check if the event is in the past
-  const isPastEvent = moment().isAfter(event?.end);
+  const eventDateTime = moment(`${event?.date}T${event?.startTime}`);
+
+  const datese = moment(event?.start).format('YYYY-MM-DD');
+
+  // Jelenlegi időpont
+  const now = moment();
+  
+  // Ellenőrzés, hogy az esemény a múltban van-e
+  const isPastEvent = now.isAfter(eventDateTime);  
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -22,7 +30,7 @@ function EventModal({ open, onClose, event }) {
         ) : (
           <div>
             <p>{'Esemény megnevezése: '} <b>{event ? event.title : ''}</b></p>
-            <p>{'Esemény dátuma: '} <b>{event ? `${moment(event.start).format('YYYY-MM-DD')} ${moment(event.start).format('HH:mm')} - ${moment(event.end).format('HH:mm')}` : ''}</b></p>
+            <p>{'Esemény dátuma: '} <b>{event ? `${moment(event.date).format('YYYY-MM-DD')} ${event.startTime} - ${event.endTime}` : ''}</b></p>
             <p>{'Esemény részletes leírása: '} <b>{event ? event.desc : ''}</b></p>
             <p>{'Szabad helyek száma: '}<b>{event ? event.availableSlots : ''}</b></p>
             <ReservationButton closeModal={handleCloseModals} id={event?.serviceId} date={moment(event?.start).format('YYYY-MM-DD')}/>

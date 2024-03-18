@@ -8,8 +8,10 @@ export default function BookingForm({id, date, closeModal}) {
     const { addBooking } = useContext(BookingContext);
     
     const serviceId = id; // Példa szolgáltatás ID
-    const userId = "65e9cfa17fce7779c762fd22"; // Vendég felhasználói ID
+    const userId = "65f8022677284e2c1d8caa48"; // Vendég felhasználói ID
      const selectedDate = date;
+
+    
 
      const handleSubmit = async () => {
         const bookingData = {
@@ -18,6 +20,8 @@ export default function BookingForm({id, date, closeModal}) {
             date: formatISO(selectedDate),
         };
        
+        console.log(bookingData)
+
         await addBooking(bookingData)
         closeModal()
     };

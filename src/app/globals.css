@@ -1,3 +1,6 @@
+
+
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -38,25 +41,19 @@ a {
   position: relative;
 }
 
+
 .rbc-toolbar  {
- position: fixed;
- top: 0;
- width: 100%;
- z-index: 5;
- background-color: white;
- padding: 3rem;
+
  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 
 .rbc-toolbar-label {
 
- position: relative;
 }
 
 .rbc-time-content {
-  padding-top: 10rem;
 }
 
 .rbc-month-view {
-  padding-top: 15rem;
 }
+

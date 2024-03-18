@@ -8,11 +8,15 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (req = NextRequest) => {
   const body = await req.json();
   const { serviceId, date, userId } = body;
+
+  
   const requestedDate = new Date(date);
 
+  
   try {
     await connect();
     const service = await Service.findById(serviceId);
+    
 
     if (!service) {
       return new NextResponse(JSON.stringify({ error: "Service not found" }), { status: 404 });

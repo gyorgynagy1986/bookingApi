@@ -12,6 +12,11 @@ export const BookingProvider = ({ children }) => {
     const { data: servicesData, error: servicesError } = useSWR("/api/services", fetcher);
     const { data: fullyBookedDaysData, error: fullyBookedDaysError } = useSWR("/api/getFullyBookedDays", fetcher);
     
+    console.log(servicesData)
+
+
+    if (!servicesData) return <div>Loading...</div>
+
     const addBooking = async (bookingData) => {
         try {
             const response = await fetch('/api/appointments', {
@@ -20,7 +25,7 @@ export const BookingProvider = ({ children }) => {
                 body: JSON.stringify(bookingData),
             });
             if (!response.ok) throw new Error('Booking failed.');
-           mutate('/api/services'); // revalidate = true
+            mutate('/api/services'); // revalidate = true
             mutate('/api/getFullyBookedDays'); // revalidate = true
             
             // SWR will take care of caching and updates

@@ -10,7 +10,8 @@ const serviceSchema = new Schema({
   maxSlots: { type: Number, required: true },
   startTime: { type: String, required: true }, // például "09:00"
   endTime: { type: String, required: true }, // például "17:00"
-},
+  recurrence: { type: Number, default: null,  required: true }
+}, 
 
 {
   toJSON: { 

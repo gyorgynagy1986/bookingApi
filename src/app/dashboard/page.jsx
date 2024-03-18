@@ -1,9 +1,9 @@
-import PostAnAppoitement from '../../components/dashboard/postAnAppoitement/postAnAppoitement'
+"use client"
 
 const page = () => {
   return (
-    <div>
-      </div>
+    <div style={{height:'100vh'}}>
+    </div>
   )
 }
 
