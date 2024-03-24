@@ -4,6 +4,8 @@ import { formatISO } from 'date-fns';
 import { BookingContext } from '@/context/bookingContext'; // A helyes kontextus importálása
 
 export default function BookingForm({id, date, closeModal}) {
+
+    console.log(formatISO(date))
     
     const { addBooking } = useContext(BookingContext);
     

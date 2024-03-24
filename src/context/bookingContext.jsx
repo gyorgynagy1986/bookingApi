@@ -12,8 +12,6 @@ export const BookingProvider = ({ children }) => {
     const { data: servicesData, error: servicesError } = useSWR("/api/services", fetcher);
     const { data: fullyBookedDaysData, error: fullyBookedDaysError } = useSWR("/api/getFullyBookedDays", fetcher);
     
-    console.log(servicesData)
-
     if (!servicesData) return <div>Loading...</div>
 
     const addBooking = async (bookingData) => {

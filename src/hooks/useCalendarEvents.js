@@ -34,22 +34,22 @@ function generateCalendarEvents(services) {
           let startDateTime = moment(date + 'T' + service.startTime).toDate();
           let endDateTime = moment(date + 'T' + service.endTime).toDate();
           
-          console.log(startDateTime)
-        
-        const dayEvent = {
-          title: service.name,
-          start: startDateTime,
-          end: endDateTime,
-          date: date,
-          startTime: service.startTime,
-          endTime: service.endTime,
-          serviceId: service._id,
-          desc: service.description,
-          availableSlots,
-          recurrence: service.recurrence,
-          visible: service.visible
-        };
-        
+          
+          const dayEvent = {
+              title: service.name,
+              start: startDateTime,
+              end: endDateTime,
+              date: date,
+              startTime: service.startTime,
+              endTime: service.endTime,
+              serviceId: service._id,
+              desc: service.description,
+              availableSlots,
+              recurrence: service.recurrence,
+              visible: service.visible
+            };
+            console.log(dayEvent)
+            
         events.push(dayEvent);
       });
     }

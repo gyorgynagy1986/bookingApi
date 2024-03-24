@@ -12,7 +12,6 @@ const Appointments = () => {
   const { data, error } = useSWR('/api/users', fetcher);
   const [selectedService, setSelectedService] = useState(null);
 
-    console.log(data)
 
   const deleteService = async (id) => { 
     try {

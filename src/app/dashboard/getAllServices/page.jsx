@@ -17,7 +17,6 @@ const deleteService = async (id) => {
 const ServiceListing = () => {
     const { data, error } = useSWR('/api/services', fetcher);
 
-    console.log(data)
 
     if (error) return <div>Failed to load</div>;
     if (!data) return <div>Loading...</div>;

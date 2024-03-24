@@ -5,7 +5,6 @@ import ReservationButton from '@/components/dashboard/postAnAppoitement/postAnAp
 
 function EventModal({ open, onClose, event }) {
 
-
   const handleCloseModals = () => {
     onClose(); // Bezárás a szülő komponensben
   };

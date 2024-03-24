@@ -8,7 +8,6 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (req = NextRequest) => {
   const body = await req.json();
   const { serviceId, date, userId } = body;
-
   
   const requestedDate = new Date(date);
 
@@ -22,8 +21,14 @@ export const POST = async (req = NextRequest) => {
       return new NextResponse(JSON.stringify({ error: "Service not found" }), { status: 404 });
     }
 
-    if (requestedDate < new Date(service.availableFrom) || requestedDate > new Date(service.availableTo)) {
-      return new NextResponse(JSON.stringify({ error: "The requested date is out of the available range." }), { status: 400 });
+    console.log(requestedDate,  service.availableFrom)
+
+    let requestedDateStartOfDay = new Date(requestedDate).setHours(0, 0, 0, 0);
+    let serviceAvailableFromStartOfDay = new Date(service.availableFrom).setHours(0, 0, 0, 0);
+    let serviceAvailableToStartOfDay = new Date(service.availableTo).setHours(0, 0, 0, 0);
+    
+    if (requestedDateStartOfDay < serviceAvailableFromStartOfDay || requestedDateStartOfDay > serviceAvailableToStartOfDay) {
+        return new NextResponse(JSON.stringify({ error: "The requested date is out of the available range." }), { status: 400 });
     }
 
     // Újra ellenőrizzük a foglalások számát

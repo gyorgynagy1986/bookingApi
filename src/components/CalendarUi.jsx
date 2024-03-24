@@ -53,7 +53,6 @@ const CalendarUi = () => {
   //   ...events2, 
   //]
   
-  console.log(events)
 
   return (
     <>
