@@ -48,7 +48,7 @@ const ServiceListing = () => {
 
     
     return (
-        <>
+        <div className='min-h'>
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -91,7 +91,7 @@ const ServiceListing = () => {
                     ))}
                 </tbody>
             </Table>
-        </>
+        </div>
     );
 };
 

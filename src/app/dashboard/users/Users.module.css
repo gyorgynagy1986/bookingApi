@@ -1,6 +1,7 @@
 .tableContainer {
     margin: 20px;
     overflow-x: auto;
+    min-height: 50rem;
   }
   
   .table {

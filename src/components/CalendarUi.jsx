@@ -54,7 +54,7 @@ const CalendarUi = () => {
   //]
   
   return (
-    <>
+    <div className='calContainer'>
       <Calendar
         localizer={localizer}
         selectable={true}
@@ -64,7 +64,7 @@ const CalendarUi = () => {
         endAccessor="end"
         components={customComponents}
         eventPropGetter={eventPropGetter}
-        style={{ height: '100vh' }}
+        style={{ height: '80%' }}
         messages={{
           next: "Következő",
           previous: "Előző",
@@ -84,7 +84,7 @@ const CalendarUi = () => {
         onClose={handleCloseModal}
         event={selectedEvent} />
       {/* Ide kerülhet a modális dialógusod a kiválasztott esemény részleteivel */}
-    </>
+    </div>
   );
 };
 

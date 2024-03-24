@@ -1,0 +1,63 @@
+/* Navbar.module.css */
+.navbar {
+  background-color: #f0f0f0; /* Light grey background */
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow for depth */
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative; /* Needed for absolute positioning of children */
+  padding-left: 15vw;
+  padding-right: 15vw;
+}
+
+.navItems a, .brand {
+  margin-right: 20px;
+  text-decoration: none;
+  color: #333; /* Dark text for better readability */
+}
+
+.dropdown {
+  position: relative; /* Establishes a new positioning context for dropdownContent */
+  cursor: pointer;
+}
+
+.dropdownIndicator {
+  margin-left: 5px; /* Small space between text and indicator */
+}
+
+.dropdownContent {
+  display: none; /* Hidden by default */
+  position: absolute; /* Positioned absolutely relative to its parent .dropdown */
+  background-color: #f9f9f9; /* Slightly off-white background for dropdown items */
+  min-width: 160px; /* Minimum width for dropdown items */
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Shadow for depth */
+  z-index: 1000; /* High z-index to ensure it appears above other content */
+  top: 100%; /* Aligns the top of the dropdown content with the bottom of the toggle */
+  left: 0; /* Aligns the dropdown content to the left of the toggle */
+}
+
+.show {
+  display: block; /* Shows the dropdown content */
+}
+
+.dropdownContent a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block; /* Dropdown links should take up the full width of the dropdown */
+}
+
+.dropdownContent a:hover {
+  background-color: #f1f1f1; /* Light grey background on hover for visual feedback */
+}
+
+/* Optional: Style for a divider in the dropdown, if needed */
+.divider {
+  height: 1px;
+  background-color: #eee; /* Light grey divider */
+  margin: 5px 0; /* Spacing above and below the divider */
+}
