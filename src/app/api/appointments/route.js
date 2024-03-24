@@ -20,9 +20,7 @@ export const POST = async (req = NextRequest) => {
     if (!service) {
       return new NextResponse(JSON.stringify({ error: "Service not found" }), { status: 404 });
     }
-
-    console.log(requestedDate,  service.availableFrom)
-
+    
     let requestedDateStartOfDay = new Date(requestedDate).setHours(0, 0, 0, 0);
     let serviceAvailableFromStartOfDay = new Date(service.availableFrom).setHours(0, 0, 0, 0);
     let serviceAvailableToStartOfDay = new Date(service.availableTo).setHours(0, 0, 0, 0);

@@ -53,7 +53,7 @@ const PostAServiceForm = () => {
       startTime: startTime.format('HH:mm'),
       endTime: endTime.format('HH:mm'),
       recurrence:isRecurring,
-      recurrenceDays: isRecurring ? selectedDays : [],
+      recurrenceDays: isRecurring ? selectedDays : [0,1,2,3,4,5,6],
     };
 
     try {

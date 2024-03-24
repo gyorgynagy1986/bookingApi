@@ -21,10 +21,7 @@ function generateDaysRange(start, end, maxSlots, recurrenceDays, availableSlotsP
 function generateCalendarEvents(services) {
   const events = [];
   
-  console.log(services)
-
   services.forEach(service => {
-    if (service.recurrence) {
       // Generate days range considering recurrenceDays and availableSlotsPerDay
       const daysRange = generateDaysRange(service.availableFrom, service.availableTo, service.maxSlots, service.recurrenceDays, service.availableSlotsPerDay);
 
@@ -33,7 +30,6 @@ function generateCalendarEvents(services) {
           
           let startDateTime = moment(date + 'T' + service.startTime).toDate();
           let endDateTime = moment(date + 'T' + service.endTime).toDate();
-          
           
           const dayEvent = {
               title: service.name,
@@ -48,11 +44,10 @@ function generateCalendarEvents(services) {
               recurrence: service.recurrence,
               visible: service.visible
             };
-            console.log(dayEvent)
             
-        events.push(dayEvent);
+            events.push(dayEvent);
+
       });
-    }
   });
 
   return events;
