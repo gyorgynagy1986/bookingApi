@@ -7,6 +7,7 @@ import {
   FormGroup, FormControl, Switch
 } from '@mui/material';
 import 'dayjs/locale/hu';
+import style from './serviceForm.module.css'
 
 const daysOfWeek = [
   { value: 1, label: 'Hétfő' },
@@ -78,7 +79,8 @@ const PostAServiceForm = () => {
   };
 
   return (
-    <>
+    <div className={style.container}>
+      <div className={style.containeForm}>
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="hu">
         <Grid container spacing={3} direction="column">
           <Grid item>
@@ -158,7 +160,7 @@ const PostAServiceForm = () => {
               <Grid item>
                 <FormControlLabel
                   control={<Switch checked={isRecurring} onChange={(e) => setIsRecurring(e.target.checked)} />}
-                  label="Recurring Service"
+                  label="Ismétlődő napok"
                 />
               </Grid>
               {isRecurring && (
@@ -187,7 +189,8 @@ const PostAServiceForm = () => {
               </Grid>
             </Grid>
           </LocalizationProvider>
-        </>
+          </div>
+        </div>
       );
     };
     

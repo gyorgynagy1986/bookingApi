@@ -1,10 +1,20 @@
 
-.formContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 400px;
-    margin: auto;
+.container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 4rem;
+  gap: 10px;
+  }
+
+  .containeForm {
+    background-color: #e9e8e846;
+    border-radius: 2rem;
+    padding: 4rem;
+
   }
   
   .submitButton {

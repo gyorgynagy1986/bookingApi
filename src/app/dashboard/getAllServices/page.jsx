@@ -1,6 +1,5 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import axios from 'axios';
 import Table from 'react-bootstrap/Table';
@@ -17,9 +16,10 @@ const deleteService = async (id) => {
 const ServiceListing = () => {
     const { data, error } = useSWR('/api/services', fetcher);
 
-
     if (error) return <div>Failed to load</div>;
     if (!data) return <div>Loading...</div>;
+
+    console.log(data)
 
     const handleDelete = (id) => {
         const isConfirmed = window.confirm('Are you sure you want to delete this service?');
@@ -28,11 +28,18 @@ const ServiceListing = () => {
         }
     };
 
+    // Új függvény a szolgáltatás szerkesztéséhez
+    const handleEdit = (id) => {
+        // Ez egy egyszerű átirányítás a szerkesztő oldalra az ID használatával
+        // Megjegyzés: Ellenőrizd, hogy ez az útvonal megfelel-e az alkalmazásodnak
+        window.location.href = `/dashboard/getAllServices/${id}`;
+    };
+
     const getDayNames = (recurrenceDays) => {
         const dayNames = ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'];
     
         // Először rendezzük a napokat az indexük alapján, ha fordított sorrendet szeretnénk, akkor itt megfordítjuk a tömböt
-        const sortedAndReversedDays = recurrenceDays.sort((a, b) => a - b).reverse();
+        const sortedAndReversedDays = recurrenceDays.sort((a, b) => a - b)
     
         return sortedAndReversedDays
             .map(dayIndex => dayNames[dayIndex])
@@ -52,6 +59,7 @@ const ServiceListing = () => {
                         <th>Ismétlődés</th>
                         <th>Start Time</th>
                         <th>End Time</th>
+                        <th>Publikus</th>
                         <th>Available Slots Per Day</th>
                         <th>Actions</th>
                     </tr>
@@ -66,6 +74,7 @@ const ServiceListing = () => {
                             <td>{getDayNames(service.recurrenceDays)}</td>
                             <td>{service.startTime}</td>
                             <td>{service.endTime}</td>
+                            <th>{service.visible ?  'Publikus' : 'Nem publikus'}</th>
                             <td>
                                 {/* Basic Dropdown for Available Slots */}
                                 <select>
@@ -75,6 +84,7 @@ const ServiceListing = () => {
                                 </select>
                             </td>
                             <td>
+                                <Button variant="secondary" onClick={() => handleEdit(service._id)}>Edit</Button>
                                 <Button variant="danger" onClick={() => handleDelete(service._id)}>Delete</Button>
                             </td>
                         </tr>

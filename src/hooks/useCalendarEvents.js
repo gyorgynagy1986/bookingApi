@@ -44,9 +44,11 @@ function generateCalendarEvents(services) {
               recurrence: service.recurrence,
               visible: service.visible
             };
-            
-            events.push(dayEvent);
 
+            if(service.visible === true) {
+             events.push(dayEvent);
+            } 
+            
       });
   });
 

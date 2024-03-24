@@ -1,0 +1,91 @@
+/* ServiceForm.module.css */
+
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px auto;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px; /* Adjust based on your preference */
+    background-color: #f4f4f4; /* Light grey background */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow for depth */
+}
+
+.input, .checkbox, .submitButton {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc; /* Light grey border */
+    font-size: 16px; /* Readable font size */
+}
+
+.input:focus, .checkbox:focus, .submitButton:focus {
+    outline: none;
+    border-color: #007bff; /* Focus state with a blue border */
+}
+
+.checkbox {
+    width: 20px; /* Smaller width for checkboxes */
+    height: 20px; /* Matching height for checkboxes */
+}
+
+.checkboxContainer {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.submitButton {
+    background-color: #007bff; /* Blue background for the submit button */
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.label {
+    font-size: 18px; /* Slightly larger font size for labels */
+    color: #333; /* Dark grey color for text */
+}
+
+.successMessage, .errorMessage {
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.successMessage {
+    background-color: #d4edda; /* Light green background */
+    color: #155724; /* Dark green text */
+    border: 1px solid #c3e6cb; /* Green border */
+}
+
+.errorMessage {
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text */
+    border: 1px solid #f5c6cb; /* Red border */
+}
+
+.fieldGroup {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    gap: 10px; /* Spacing between label and input */
+  }
+
+  /* Additional CSS might not be necessary, but here's a reminder */
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* other styles */
+}
+
+.fieldGroup {
+  display: flex;
+  align-items: center; /* Center items vertically */
+  gap: 10px; /* Spacing between label and input */
+}
+
+/* Ensure your .input and .label styles are suitable for vertical stacking */
