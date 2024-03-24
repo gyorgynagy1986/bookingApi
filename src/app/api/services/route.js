@@ -10,11 +10,12 @@ export const GET = async () => {
   await connect();
   
   try {
-    // const today = new Date();
-    // today.setHours(0, 0, 0, 0);
+    
+  //  const today = new Date();
+  //   today.setHours(0, 0, 0, 0);
 
     const services = await Service.find({
-      // availableFrom: { $gte: today },
+     // availableFrom: { $gte: today },
     });
 
     const servicesWithAvailableSlots = await Promise.all(services.map(async (service) => {
@@ -54,11 +55,15 @@ export const GET = async () => {
 
       // Naponta elérhető helyek kiszámítása
       const availableSlotsPerDay = {};
+
       
       bookingsAggregation.forEach(booking => {
         const dateKey = booking.date; // "YYYY-MM-DD"
         availableSlotsPerDay[dateKey] = service.maxSlots - booking.bookedSlots;
       });
+    
+      
+      const elementsCount = Object.keys(availableSlotsPerDay).length;
 
       return {
         ...service.toObject(),
@@ -85,28 +90,28 @@ export const POST = async (req, res) => {
     const LOCAL_TIMEZONE = 'Europe/Budapest';
     const UTC_TIMEZONE = 'UTC';
 
-      // A dátumok átalakítása a helyi időzóna napjának kezdetére és végére
-      const convertToLocalDayStartEnd = (date, isStartOfDay) => {
-          const formattedDate = moment.tz(date, LOCAL_TIMEZONE);
-          if (isStartOfDay) {
-              return formattedDate.startOf('day').tz(UTC_TIMEZONE, true).format();
-          } else {
-              return formattedDate.endOf('day').tz(UTC_TIMEZONE, true).format();
-          }
-      };
+     // A dátumok átalakítása a helyi időzóna napjának kezdetére és végére
+     const convertToLocalDayStartEnd = (date, isStartOfDay) => {
+         const formattedDate = moment.tz(date, LOCAL_TIMEZONE);
+         if (isStartOfDay) {
+             return formattedDate.startOf('day').tz(UTC_TIMEZONE, true).format();
+         } else {
+             return formattedDate.endOf('day').tz(UTC_TIMEZONE, true).format();
+         }
+     };
+     // Konvertálás és kiíratás
+     const availableFromUTC = convertToLocalDayStartEnd(body.availableFrom, true);
+     const availableToUTC = convertToLocalDayStartEnd(body.availableTo, false);
 
-      // Konvertálás és kiíratás
-      const availableFromUTC = convertToLocalDayStartEnd(body.availableFrom, true);
-      const availableToUTC = convertToLocalDayStartEnd(body.availableTo, false);
+     const newServiceData = {
+         ...body,
+           availableFrom: availableFromUTC, // '00:00:00.000Z'
+           availableTo: availableToUTC,     // '23:59:59.999Z'
+     };
 
-      const newServiceData = {
-          ...body,
-            availableFrom: availableFromUTC, // '00:00:00.000Z'
-            availableTo: availableToUTC,     // '23:59:59.999Z'
-            
-      };
+     console.log(availableFromUTC)
 
-    const newService = new Service(newServiceData);
+    const newService = new Service(body);
 
     await connect();
     

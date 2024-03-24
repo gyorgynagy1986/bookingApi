@@ -3,6 +3,7 @@ import './globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Nav from "@/components/nav/Nav"
 
+
 const roboto = Roboto({
   weight: '400',
   subsets: ['latin'],

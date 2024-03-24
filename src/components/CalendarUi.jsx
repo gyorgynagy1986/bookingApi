@@ -5,7 +5,9 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { useBookings } from '@/context/bookingContext'; // Feltételezve, hogy a BookingContext fájlodban van definiálva
 import useCalendarEvents from '@/hooks/useCalendarEvents';
+// import useCalendarEventsrecurrenceFalse from '@/hooks/reccuranceFalse';
 import EventModal from './modals/Modal';
+import 'moment-timezone' 
 
 // CSS for calendar
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -15,8 +17,12 @@ import "moment/locale/hu";
  import useEventStyles from "@/hooks/calendarEventColorHandler";
  import useCustomEventComponents from '@/hooks/managedCalendarDataInWeekAndDayView';
 
-moment.locale("hu");
-const localizer = momentLocalizer(moment);
+
+ moment.tz.setDefault()
+
+
+
+const localizer = momentLocalizer(moment)
 
 const CalendarUi = () => {
   const { services, fullyBookedDays } = useBookings()
@@ -38,12 +44,16 @@ const CalendarUi = () => {
 
   
   // Az események és teljesen lefoglalt napok kiszámítása a kontextusból származó adatok alapján
-  const events = useCalendarEvents(services);
+   const events = useCalendarEvents(services);
+  //const events2 = useCalendarEventsrecurrenceFalse(services)
   const eventPropGetter = useEventStyles(fullyBookedDays, services);
   const customComponents = useCustomEventComponents();
   
-console.log(events)
-
+  //const calendarEvents = [
+  //   ...events2, 
+  //]
+  
+  console.log(events)
 
   return (
     <>

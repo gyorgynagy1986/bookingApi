@@ -14,7 +14,6 @@ export const BookingProvider = ({ children }) => {
     
     console.log(servicesData)
 
-
     if (!servicesData) return <div>Loading...</div>
 
     const addBooking = async (bookingData) => {

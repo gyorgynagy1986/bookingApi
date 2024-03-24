@@ -10,7 +10,9 @@ const serviceSchema = new Schema({
   maxSlots: { type: Number, required: true },
   startTime: { type: String, required: true }, // például "09:00"
   endTime: { type: String, required: true }, // például "17:00"
-  recurrence: { type: Number, default: null,  required: true }
+  recurrence: { type: Boolean, default: true, required: true },
+  recurrenceDays: [{ type: Number }], // Új mező: a hét napjai (0 = vasárnap, 1 = hétfő, stb.)
+  visible: { type: Boolean, default: true, required: true }
 }, 
 
 {

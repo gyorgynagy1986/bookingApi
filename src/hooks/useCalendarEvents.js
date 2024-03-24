@@ -1,28 +1,41 @@
-import { useContext, useState, useEffect } from "react";
-import { BookingContext } from '@/context/bookingContext';
 import moment from 'moment-timezone';
 
-const useCalendarEvents = () => {
-  const { services } = useContext(BookingContext);
+function generateDaysRange(start, end, maxSlots, recurrenceDays, availableSlotsPerDay) {
+    let days = {};
+    let currentDate = moment(start).startOf('day');
+    const stopDate = moment(end).startOf('day');
+    
+    while (currentDate <= stopDate) {
+      const formattedDate = currentDate.format('YYYY-MM-DD');
+      if (recurrenceDays.includes(currentDate.day())) {
+        days[formattedDate] = availableSlotsPerDay.hasOwnProperty(formattedDate) ? availableSlotsPerDay[formattedDate] : maxSlots;
+      }
+      currentDate = currentDate.add(1, 'days');
+    }
+    
+    return days;
+  }
+
+
+// Main function to generate calendar events based on services data
+function generateCalendarEvents(services) {
+  const events = [];
   
-  const [events, setEvents] = useState([]);
+  console.log(services)
 
-  console.log(events)
+  services.forEach(service => {
+    if (service.recurrence) {
+      // Generate days range considering recurrenceDays and availableSlotsPerDay
+      const daysRange = generateDaysRange(service.availableFrom, service.availableTo, service.maxSlots, service.recurrenceDays, service.availableSlotsPerDay);
 
-  useEffect(() => {
-    const tempEvents = [];
+      Object.entries(daysRange).forEach(([date, availableSlots]) => {
 
-    services.forEach(service => {
-      // Generálj egy objektumot minden napra az intervallumban a maxSlots értékkel
-      const daysRange = generateDaysRange(service.availableFrom, service.availableTo, service.maxSlots);
-      // Egyesítsd az alapértelmezett napokat az availableSlotsPerDay adataival
-      const fullAvailableSlotsPerDay = { ...daysRange, ...service.availableSlotsPerDay };
-
-      Object.entries(fullAvailableSlotsPerDay).forEach(([date, availableSlots]) => {
-        const timeZone = 'Europe/Budapest';
-        let startDateTime = moment.tz(date + 'T' + service.startTime, timeZone).toDate();
-        let endDateTime = moment.tz(date + 'T' + service.endTime, timeZone).toDate();
-
+          
+          let startDateTime = moment(date + 'T' + service.startTime).toDate();
+          let endDateTime = moment(date + 'T' + service.endTime).toDate();
+          
+          console.log(startDateTime)
+        
         const dayEvent = {
           title: service.name,
           start: startDateTime,
@@ -30,36 +43,19 @@ const useCalendarEvents = () => {
           date: date,
           startTime: service.startTime,
           endTime: service.endTime,
-          allDay: false,
           serviceId: service._id,
           desc: service.description,
           availableSlots,
-          recurrence: service.recurrence
+          recurrence: service.recurrence,
+          visible: service.visible
         };
-
-        tempEvents.push(dayEvent);
+        
+        events.push(dayEvent);
       });
-    });
-
-    setEvents(tempEvents);
-  }, [services]);
+    }
+  });
 
   return events;
-};
-
-// Generál egy objektumot minden napra a megadott intervallumban a maxSlots értékkel
-function generateDaysRange(start, end, maxSlots) {
-  let days = {};
-  let currentDate = moment(start);
-  const stopDate = moment(end);
-
-  while (currentDate <= stopDate) {
-    days[currentDate.format('YYYY-MM-DD')] = maxSlots;
-    currentDate = currentDate.add(1, 'days');
-  }
-
-  return days;
 }
-export default useCalendarEvents;
 
-
+export default generateCalendarEvents

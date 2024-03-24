@@ -1,11 +1,10 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import moment from 'moment';
 
 const fetcher = url => axios.get(url).then(res => res.data);
@@ -17,23 +16,31 @@ const deleteService = async (id) => {
 
 const ServiceListing = () => {
     const { data, error } = useSWR('/api/services', fetcher);
-    const [showModal, setShowModal] = useState(false);
-    const [selectedService, setSelectedService] = useState(null);
+
+    console.log(data)
 
     if (error) return <div>Failed to load</div>;
     if (!data) return <div>Loading...</div>;
 
     const handleDelete = (id) => {
-        setSelectedService(id);
-        setShowModal(true);
+        const isConfirmed = window.confirm('Are you sure you want to delete this service?');
+        if (isConfirmed) {
+            deleteService(id);
+        }
     };
 
-    const confirmDelete = async () => {
-        await deleteService(selectedService);
-        setShowModal(false);
-        setSelectedService(null); // Reset selection
+    const getDayNames = (recurrenceDays) => {
+        const dayNames = ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'];
+    
+        // Először rendezzük a napokat az indexük alapján, ha fordított sorrendet szeretnénk, akkor itt megfordítjuk a tömböt
+        const sortedAndReversedDays = recurrenceDays.sort((a, b) => a - b).reverse();
+    
+        return sortedAndReversedDays
+            .map(dayIndex => dayNames[dayIndex])
+            .join(', ');
     };
 
+    
     return (
         <>
             <Table striped bordered hover>
@@ -43,6 +50,7 @@ const ServiceListing = () => {
                         <th>Description</th>
                         <th>Available From</th>
                         <th>Available To</th>
+                        <th>Ismétlődés</th>
                         <th>Start Time</th>
                         <th>End Time</th>
                         <th>Available Slots Per Day</th>
@@ -56,6 +64,7 @@ const ServiceListing = () => {
                             <td>{service.description}</td>
                             <td>{moment(service.availableFrom).format('YYYY-MM-DD')}</td>
                             <td>{moment(service.availableTo).format('YYYY-MM-DD')}</td>
+                            <td>{getDayNames(service.recurrenceDays)}</td>
                             <td>{service.startTime}</td>
                             <td>{service.endTime}</td>
                             <td>
@@ -73,20 +82,8 @@ const ServiceListing = () => {
                     ))}
                 </tbody>
             </Table>
-
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Confirm Deletion</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Are you sure you want to delete this service?</Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
-                    <Button variant="danger" onClick={confirmDelete}>Delete</Button>
-                </Modal.Footer>
-            </Modal>
         </>
     );
 };
 
 export default ServiceListing;
-
