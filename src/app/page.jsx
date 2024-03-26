@@ -1,5 +1,5 @@
 import CalendarUi from "../components/CalendarUi";
-import { BookingProvider } from '@/context/bookingContext';
+//import { BookingProvider } from '@/context/bookingContext';
 
 
 export default async  function Home() { 
@@ -7,9 +7,7 @@ export default async  function Home() {
   
 return (
     <div>
-       <BookingProvider>
        <CalendarUi />
-     </BookingProvider>
     </div>
   );
 }

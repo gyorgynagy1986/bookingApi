@@ -3,6 +3,7 @@ import './globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Nav from "@/components/nav/Nav"
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
+import { BookingProvider } from '@/context/bookingContext';
 
 
 const roboto = Roboto({
@@ -20,8 +21,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={roboto.className}>
       <AuthProvider>
+       <BookingProvider>
       <Nav />
         {children}
+        </BookingProvider>
       </AuthProvider>
       </body>
     </html>

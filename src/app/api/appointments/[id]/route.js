@@ -34,6 +34,9 @@ await dbConnect();
 
 const { pathname } = req.nextUrl;
 
+console.log(pathname)
+
+
 if (req.method !== 'GET') {
   return new NextResponse(JSON.stringify({ error: `Módszer ${req.method} nem engedélyezett.` }), { status: 405 });
 }
@@ -41,12 +44,15 @@ if (req.method !== 'GET') {
 // Az ID kinyerése az URL-ből
 const id = pathname.split('/').pop();
 
+console.log(id)
+
 try {
-  const deletedAppointment = await Appointment.findById({user});
-  if (!deletedAppointment) {
+  const myAppointments = await Appointment.find({ user: id })
+  
+  if (!myAppointments) {
     return new NextResponse(JSON.stringify({ success: false, error: "Foglalás nem található." }), { status: 404 });
   }
-  return new NextResponse(JSON.stringify({ success: true, data: {} }), { status: 200 });
+  return new NextResponse(JSON.stringify({ success: true, data: myAppointments }), { status: 200 });
 } catch (error) {
   return new NextResponse(JSON.stringify({ success: false, error: error.message }), { status: 400 });
 }

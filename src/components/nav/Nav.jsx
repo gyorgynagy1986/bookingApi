@@ -24,7 +24,7 @@ const Navbar = () => {
             {/* Add more dropdown links as needed */}
           </div>
         </div>
-        <div className={styles.userlink}>{ session.status === 'authenticated' && <a href='/dashboard/my-page'>{session?.data?.user?.name}</a> } { session.status === 'authenticated' &&  <button onClick={() => signOut()}>Sign out</button>}</div>
+        <div className={styles.userlink}>{ session.status === 'authenticated' && <Link href='/dashboard/my-page'>{session?.data?.user?.name}</Link> } { session.status === 'authenticated' &&  <button onClick={() => signOut()}>Sign out</button>}</div>
        <div>{ session.status === 'unauthenticated' && <Link href="/dashboard/login">Login</Link>}</div>
       </div>
     </nav>

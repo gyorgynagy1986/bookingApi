@@ -2,12 +2,15 @@
 
 import React, { createContext, useContext, useState } from 'react';
 import useSWR, { mutate } from 'swr';
+import {useSession } from "next-auth/react";
 
 export const BookingContext = createContext();
 
 const fetcher = (...args) => fetch(...args).then(res => res.json());
 
 export const BookingProvider = ({ children }) => {
+    const session = useSession()
+
     // Az SWR hook használata a szolgáltatások és teljesen lefoglalt napok lekérdezéséhez
     const { data: servicesData, error: servicesError } = useSWR("/api/services", fetcher);
     const { data: fullyBookedDaysData, error: fullyBookedDaysError } = useSWR("/api/getFullyBookedDays", fetcher);
@@ -39,7 +42,7 @@ export const BookingProvider = ({ children }) => {
 
     // Pass down the SWR data and the addBooking function through context
     return (
-        <BookingContext.Provider value={{ editData: editData?.data, services: servicesData?.services, fullyBookedDays: fullyBookedDaysData, addBooking}}>
+        <BookingContext.Provider value={{ editData: editData?.data, services: servicesData?.services, fullyBookedDays: fullyBookedDaysData, addBooking, userSession: session?.data?.user}}>
             {children}
         </BookingContext.Provider>
     );
