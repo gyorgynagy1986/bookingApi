@@ -3,23 +3,23 @@
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const Login = ({ url }) => {
   const session = useSession();
   const router = useRouter();
-  const params = useSearchParams();
+ // const params = useSearchParams();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   console.log(session)
 
-  useEffect(() => {
-    setError(params.get("error"));
-    setSuccess(params.get("success"));
-  }, [params]);
-
+  //useEffect(() => {
+  //  setError(params.get("error"));
+  //  setSuccess(params.get("success"));
+  //}, [params]);
+//
   if (session.status === "loading") {
     return <p>Loading...</p>;
   }
