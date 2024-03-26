@@ -4,12 +4,12 @@
 import React, { useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import styles from './Appointments.module.css';
-import Button from 'react-bootstrap/Button';
 
 const fetcher = (...args) => fetch(...args).then(res => res.json());
 
 const Appointments = () => {
   const { data, error } = useSWR('/api/appointments', fetcher);
+  
   const [selectedService, setSelectedService] = useState(null);
 
   const deleteService = async (id) => { 

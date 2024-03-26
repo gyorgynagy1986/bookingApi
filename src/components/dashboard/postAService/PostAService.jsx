@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import moment from 'moment-timezone';
 import { LocalizationProvider, DatePicker, TimePicker } from '@mui/x-date-pickers';
+import { useSession } from "next-auth/react";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   TextField, Grid, Button, Checkbox, FormControlLabel,
@@ -30,6 +31,8 @@ const PostAServiceForm = () => {
   const [isRecurring, setIsRecurring] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
 
+  const session = useSession()
+
   const handleDayChange = (event) => {
     const value = parseInt(event.target.value, 10);
     setSelectedDays(
@@ -50,6 +53,7 @@ const PostAServiceForm = () => {
       description: serviceDescription,
       availableFrom: availableFrom, 
       availableTo: availableTo,
+      user: session.data.user._id,
       maxSlots,
       startTime: startTime.format('HH:mm'),
       endTime: endTime.format('HH:mm'),

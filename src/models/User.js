@@ -12,12 +12,24 @@ const userSchema = new Schema(
       type: String,
       required: [true, "An email is required"],
       unique: true, // Ez garantálja, hogy az email cím egyedi legyen az adatbázisban
-      match: [/.+\@.+\..+/, "Please fill a valid email address"], // Egyszerű regex az email formátumának ellenőrzésére
     },
     phone: {
       type: String,
       required: false, // Opcionális
-      match: [/^\+?[1-9]\d{1,14}$/, "Please fill a valid phone number"], // Egyszerű regex a telefon formátumának ellenőrzésére
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+     businessName: {
+       type: String,
+       required: true,
+       unique: true,
+     },
+    role: {
+      type: String,
+      default: "user",
+      required: true,
     },
     // További mezők hozzáadhatók szükség esetén
   },

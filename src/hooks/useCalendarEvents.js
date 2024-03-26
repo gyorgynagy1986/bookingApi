@@ -16,15 +16,14 @@ function generateDaysRange(start, end, maxSlots, recurrenceDays, availableSlotsP
     return days;
   }
 
-
 // Main function to generate calendar events based on services data
 function generateCalendarEvents(services) {
   const events = [];
   
+
   services.forEach(service => {
       // Generate days range considering recurrenceDays and availableSlotsPerDay
       const daysRange = generateDaysRange(service.availableFrom, service.availableTo, service.maxSlots, service.recurrenceDays, service.availableSlotsPerDay);
-
       Object.entries(daysRange).forEach(([date, availableSlots]) => {
 
           
@@ -39,6 +38,7 @@ function generateCalendarEvents(services) {
               startTime: service.startTime,
               endTime: service.endTime,
               serviceId: service._id,
+              editById: service._id + date,
               desc: service.description,
               availableSlots,
               recurrence: service.recurrence,

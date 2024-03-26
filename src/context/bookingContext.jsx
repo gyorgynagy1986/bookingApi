@@ -11,7 +11,8 @@ export const BookingProvider = ({ children }) => {
     // Az SWR hook használata a szolgáltatások és teljesen lefoglalt napok lekérdezéséhez
     const { data: servicesData, error: servicesError } = useSWR("/api/services", fetcher);
     const { data: fullyBookedDaysData, error: fullyBookedDaysError } = useSWR("/api/getFullyBookedDays", fetcher);
-    
+    const { data: editData, error: editDataError } = useSWR("/api/editADayofService", fetcher);
+
     if (!servicesData) return <div>Loading...</div>
 
     const addBooking = async (bookingData) => {
@@ -38,7 +39,7 @@ export const BookingProvider = ({ children }) => {
 
     // Pass down the SWR data and the addBooking function through context
     return (
-        <BookingContext.Provider value={{ services: servicesData?.services, fullyBookedDays: fullyBookedDaysData, addBooking}}>
+        <BookingContext.Provider value={{ editData: editData?.data, services: servicesData?.services, fullyBookedDays: fullyBookedDaysData, addBooking}}>
             {children}
         </BookingContext.Provider>
     );

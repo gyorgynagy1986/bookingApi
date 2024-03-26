@@ -61,3 +61,10 @@
   background-color: #eee; /* Light grey divider */
   margin: 5px 0; /* Spacing above and below the divider */
 }
+
+.userlink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}

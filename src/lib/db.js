@@ -18,11 +18,14 @@ const connect = async () => {
     return;
   }
 
-  try {
-    await mongoose.connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+// Indexek frissítése
+
+try {
+  await mongoose.connect(mongoUri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+   // await mongoose.connection.db.collection('User').ensureIndex({ email: 1 }, { unique: true });
     console.log("Connected to MongoDB successfully");
   } catch (connectionError) {
     console.error("Connection failed: ", connectionError);

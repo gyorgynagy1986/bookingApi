@@ -2,6 +2,7 @@ import { Roboto } from 'next/font/google'
 import './globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Nav from "@/components/nav/Nav"
+import AuthProvider from "@/components/AuthProvider/AuthProvider";
 
 
 const roboto = Roboto({
@@ -18,8 +19,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={roboto.className}>
+      <AuthProvider>
       <Nav />
         {children}
+      </AuthProvider>
       </body>
     </html>
   );

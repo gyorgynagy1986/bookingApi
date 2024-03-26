@@ -1,6 +1,8 @@
 import connect from "../../../lib/db";
 import Service from "../../../models/Service";
 import Appointment from "@/models/Appointment";
+import EditModel from "@/models/EditModel"; // Importáld az EditModel-t
+
 import moment from 'moment-timezone';
 
 import { NextRequest, NextResponse } from "next/server";
@@ -82,39 +84,11 @@ export const GET = async () => {
 
 export const POST = async (req, res) => {
   try {
-    const body = await req.json();
-
-    console.log(body)
-    
- // Az időzóna konstansok definiálása
-    const LOCAL_TIMEZONE = 'Europe/Budapest';
-    const UTC_TIMEZONE = 'UTC';
-
-     // A dátumok átalakítása a helyi időzóna napjának kezdetére és végére
-     const convertToLocalDayStartEnd = (date, isStartOfDay) => {
-         const formattedDate = moment.tz(date, LOCAL_TIMEZONE);
-         if (isStartOfDay) {
-             return formattedDate.startOf('day').tz(UTC_TIMEZONE, true).format();
-         } else {
-             return formattedDate.endOf('day').tz(UTC_TIMEZONE, true).format();
-         }
-     };
-     // Konvertálás és kiíratás
-     const availableFromUTC = convertToLocalDayStartEnd(body.availableFrom, true);
-     const availableToUTC = convertToLocalDayStartEnd(body.availableTo, false);
-
-     const newServiceData = {
-         ...body,
-           availableFrom: availableFromUTC, // '00:00:00.000Z'
-           availableTo: availableToUTC,     // '23:59:59.999Z'
-     };
-
-     console.log(availableFromUTC)
+    const body = await req.json();    
 
     const newService = new Service(body);
 
     await connect();
-    
     await newService.save();
 
     return new NextResponse(
@@ -130,3 +104,30 @@ export const POST = async (req, res) => {
     );
   }
 };
+
+
+
+ // Az időzóna konstansok definiálása
+ // const LOCAL_TIMEZONE = 'Europe/Budapest';
+ // const UTC_TIMEZONE = 'UTC';
+
+ //  // A dátumok átalakítása a helyi időzóna napjának kezdetére és végére
+ //  const convertToLocalDayStartEnd = (date, isStartOfDay) => {
+ //      const formattedDate = moment.tz(date, LOCAL_TIMEZONE);
+ //      if (isStartOfDay) {
+ //          return formattedDate.startOf('day').tz(UTC_TIMEZONE, true).format();
+ //      } else {
+ //          return formattedDate.endOf('day').tz(UTC_TIMEZONE, true).format();
+ //      }
+ //  };
+ //  // Konvertálás és kiíratás
+ //  const availableFromUTC = convertToLocalDayStartEnd(body.availableFrom, true);
+ //  const availableToUTC = convertToLocalDayStartEnd(body.availableTo, false);
+
+ //  const newServiceData = {
+ //      ...body,
+ //        availableFrom: availableFromUTC, // '00:00:00.000Z'
+ //        availableTo: availableToUTC,     // '23:59:59.999Z'
+ //  };
+
+ //  console.log(availableFromUTC)

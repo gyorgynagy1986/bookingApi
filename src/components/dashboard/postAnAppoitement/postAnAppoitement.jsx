@@ -2,34 +2,41 @@ import React, { useContext } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { formatISO } from 'date-fns';
 import { BookingContext } from '@/context/bookingContext'; // A helyes kontextus importálása
+import {useSession } from "next-auth/react";
+import Link from 'next/link';
 
 export default function BookingForm({id, date, closeModal}) {
+   
+    const session = useSession();
 
-    console.log(formatISO(date))
-    
+console.log(session)
+
     const { addBooking } = useContext(BookingContext);
     
-    const serviceId = id; // Példa szolgáltatás ID
-    const userId = "65fff197a735acc1969a842c"; // Vendég felhasználói ID
+     const serviceId = id; // Példa szolgáltatás ID
+     const userId = session.data.user._id; // Vendég felhasználói ID
      const selectedDate = date;
 
-    
 
      const handleSubmit = async () => {
+       
         const bookingData = {
             serviceId,
             userId,
             date: formatISO(selectedDate),
         };
        
-
         await addBooking(bookingData)
+       
         closeModal()
     };
 
     return (
         < >
-            <button onClick={handleSubmit} type="submit">Foglalás</button>
+        {session.status === 'unauthenticated' && <button type="submit"> <a href='/dashboard/login'>Login</a></button>}
+        {session.status === 'authenticated' && <button onClick={handleSubmit} type="submit">foglalás</button>}
+
         </>
     );
 }
+//{ session.status === 'authenticated' ?  <button onClick={handleSubmit} type="submit">Foglalás</button> : <link href='/dashboard/login' >login</link>}

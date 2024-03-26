@@ -12,7 +12,12 @@ const serviceSchema = new Schema({
   endTime: { type: String, required: true }, // például "17:00"
   recurrence: { type: Boolean, default: true, required: true },
   recurrenceDays: [{ type: Number }], // Új mező: a hét napjai (0 = vasárnap, 1 = hétfő, stb.)
-  visible: { type: Boolean, default: true, required: true }
+  visible: { type: Boolean, default: true, required: true },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 }, 
 
 {
@@ -28,7 +33,6 @@ const serviceSchema = new Schema({
 },
 
 );
-
 
 export default mongoose.models.Service ||
   mongoose.model("Service", serviceSchema);

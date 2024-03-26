@@ -25,34 +25,29 @@ import "moment/locale/hu";
 const localizer = momentLocalizer(moment)
 
 const CalendarUi = () => {
-  const { services, fullyBookedDays } = useBookings()
+  const { services, fullyBookedDays, editData } = useBookings()
 
-
+  
   // Modal States
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-
+  
   // Esemény kiválasztása esetén megjelenítjük a modális dialógust az esemény részleteivel
   const handleSelectEvent = (events) => {
     setSelectedEvent(events);
     setModalOpen(true);
   };
-
+  
   const handleCloseModal = () => {
     setModalOpen(false);
   };
-
+  
   
   // Az események és teljesen lefoglalt napok kiszámítása a kontextusból származó adatok alapján
-   const events = useCalendarEvents(services);
-  //const events2 = useCalendarEventsrecurrenceFalse(services)
+  const events = useCalendarEvents(services, editData);
   const eventPropGetter = useEventStyles(fullyBookedDays, services);
   const customComponents = useCustomEventComponents();
-  
-  //const calendarEvents = [
-  //   ...events2, 
-  //]
-  
+      
   return (
     <div className='calContainer'>
       <Calendar

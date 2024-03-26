@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req = NextRequest) => {
   const body = await req.json();
+  
   const { serviceId, date, userId } = body;
   
   const requestedDate = new Date(date);
