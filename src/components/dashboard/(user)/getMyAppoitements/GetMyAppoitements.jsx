@@ -20,7 +20,7 @@ const GetMyAppoitements = () => {
     try {
         await fetch(`/api/appointments/${id}`, { method: 'DELETE' });
         // Manually revalidate the data after deletion
-        mutate('/api/appointments');
+        mutate(`/api/appointments/${userSession?._id}`);
     } catch (error) {
         console.error('Error deleting appointment:', error);
         alert('Hiba történt a törlés során.');
