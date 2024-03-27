@@ -28,7 +28,7 @@ const useEventStyles = (fullyBookedDays, services) => {
 
   const serviceColors = useMemo(() => {
     const colors = {};
-    services.forEach(service => {
+    services?.forEach(service => {
       // Ensure a consistent color for each service
       colors[service._id] = stringToColorHash(service.name);
     });

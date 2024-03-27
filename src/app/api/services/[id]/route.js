@@ -27,28 +27,66 @@ export const DELETE = async(req = NextRequest) => {
 }
 
 
+//export const GET = async (req = NextRequest) => {
+//  await dbConnect();
+//
+//  const { pathname } = req.nextUrl;
+//
+//  if (req.method !== 'GET') {
+//      return new NextResponse(JSON.stringify({ error: `Method ${req.method} not allowed.` }), { status: 405 });
+//  }
+//
+//  // Extract the ID from the URL
+//  const id = pathname.split('/').pop();
+//
+//  try {
+//      const service = await Service.findById(id);
+//      if (!service) {
+//          return new NextResponse(JSON.stringify({ success: false, error: "Service not found." }), { status: 404 });
+//      }
+//      return new NextResponse(JSON.stringify({ success: true, data: service }), { status: 200 });
+//  } catch (error) {
+//      return new NextResponse(JSON.stringify({ success: false, error: error.message }), { status: 400 });
+//  }
+//}
+
+
 export const GET = async (req = NextRequest) => {
   await dbConnect();
 
   const { pathname } = req.nextUrl;
 
   if (req.method !== 'GET') {
-      return new NextResponse(JSON.stringify({ error: `Method ${req.method} not allowed.` }), { status: 405 });
+    return new NextResponse(JSON.stringify({ error: `Módszer ${req.method} nem engedélyezett.` }), { status: 405 });
   }
 
-  // Extract the ID from the URL
+  // Az ID kinyerése az URL-ből
   const id = pathname.split('/').pop();
 
   try {
-      const service = await Service.findById(id);
-      if (!service) {
-          return new NextResponse(JSON.stringify({ success: false, error: "Service not found." }), { status: 404 });
+    // Először megpróbáljuk megtalálni a szolgáltatásokat a felhasználó azonosítója alapján
+    const myService = await Service.find({ user: id });
+
+    let serviceData;
+    // Ha nincs találat a felhasználó azonosítóra, keresünk az ID alapján
+    if (myService.length === 0) {
+      const editService = await Service.findById(id);
+      if (!editService) {
+        return new NextResponse(JSON.stringify({ success: false, error: "Foglalás nem található." }), { status: 404 });
       }
-      return new NextResponse(JSON.stringify({ success: true, data: service }), { status: 200 });
+      serviceData = editService;
+    } else {
+      // Ha van találat a felhasználó azonosítóra, az első találatot használjuk
+      serviceData = myService[0]; // Vagy bármelyik logika, amely a talált elemek közül választ
+    }
+
+    return new NextResponse(JSON.stringify({ success: true, data: serviceData }), { status: 200 });
   } catch (error) {
-      return new NextResponse(JSON.stringify({ success: false, error: error.message }), { status: 400 });
+    return new NextResponse(JSON.stringify({ success: false, error: error.message }), { status: 400 });
   }
-}
+};
+
+
 
 
 // PUT művelet a szolgáltatás adatainak frissítésére

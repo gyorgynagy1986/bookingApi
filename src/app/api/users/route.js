@@ -29,11 +29,13 @@ export const GET = async () => {
    
     const body = await req.json();    
     
-    const {name, email, phone, password } = body;
+    const {name, email, businessName, phone, password } = body;
+
+    console.log(body)
     
     const hashedPassword = await bcrypt.hash(password, 5);
 
-    const newUser = new Users({name, email, phone, password: hashedPassword})
+    const newUser = new Users({name, email, phone, businessName,  password: hashedPassword})
     
     await connect();
 
@@ -47,7 +49,7 @@ export const GET = async () => {
       );
     } catch (error) {
       return new NextResponse(
-        JSON.stringify({ error: error.message }),
+        JSON.stringify({ error: error }),
         { status: 500 },
       );
     }

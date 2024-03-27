@@ -19,8 +19,6 @@ const ServiceListing = () => {
     if (error) return <div>Failed to load</div>;
     if (!data) return <div>Loading...</div>;
 
-    console.log(data)
-
     const handleDelete = (id) => {
         const isConfirmed = window.confirm('Are you sure you want to delete this service?');
         if (isConfirmed) {

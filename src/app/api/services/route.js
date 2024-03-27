@@ -1,9 +1,7 @@
 import connect from "../../../lib/db";
 import Service from "../../../models/Service";
 import Appointment from "@/models/Appointment";
-import EditModel from "@/models/EditModel"; // Importáld az EditModel-t
-
-import moment from 'moment-timezone';
+import User from "@/models/User";
 
 import { NextRequest, NextResponse } from "next/server";
 
@@ -19,6 +17,8 @@ export const GET = async () => {
     const services = await Service.find({
      // availableFrom: { $gte: today },
     });
+
+    console.log(services)
 
     const servicesWithAvailableSlots = await Promise.all(services.map(async (service) => {
       const bookingsAggregation = await Appointment.aggregate([
@@ -84,22 +84,43 @@ export const GET = async () => {
 
 export const POST = async (req, res) => {
   try {
-    const body = await req.json();    
+   
+    const body = await req.json();
 
-    const newService = new Service(body);
+    console.log(body)
 
+    // Csatlakozás az adatbázishoz, ha még nem történt meg
     await connect();
+
+    // Lekérdezzük a felhasználót az adatbázisból a userID alapján, hogy megszerezzük a cégnév információt
+    const user = await User.findById(body.user).exec(); // Feltételezzük, hogy a userID a body részében van
+
+    if (!user) {
+      return new NextResponse(
+        JSON.stringify({ error: "User not found" }),
+        { status: 404 },
+      );
+    }
+
+    // Létrehozzuk az új service-t, hozzáadjuk a cégnév információt
+    const newService = new Service({
+      ...body,
+      companyName: user.businessName, // Hozzáadjuk a cégnévet
+    });
+
+    // Mentjük az új service-t
     await newService.save();
 
     return new NextResponse(
       JSON.stringify({
+        message: "Service created successfully",
         newService,
       }),
       { status: 200 },
     );
   } catch (error) {
     return new NextResponse(
-      JSON.stringify({ error: error }),
+      JSON.stringify({ error: error.toString() }), // Jobb hibakezelés
       { status: 500 },
     );
   }

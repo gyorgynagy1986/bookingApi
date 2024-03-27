@@ -8,7 +8,7 @@ function generateDaysRange(start, end, maxSlots, recurrenceDays, availableSlotsP
     while (currentDate <= stopDate) {
       const formattedDate = currentDate.format('YYYY-MM-DD');
       if (recurrenceDays.includes(currentDate.day())) {
-        days[formattedDate] = availableSlotsPerDay.hasOwnProperty(formattedDate) ? availableSlotsPerDay[formattedDate] : maxSlots;
+        days[formattedDate] = availableSlotsPerDay?.hasOwnProperty(formattedDate) ? availableSlotsPerDay[formattedDate] : maxSlots;
       }
       currentDate = currentDate.add(1, 'days');
     }
@@ -20,8 +20,9 @@ function generateDaysRange(start, end, maxSlots, recurrenceDays, availableSlotsP
 function generateCalendarEvents(services) {
   const events = [];
   
+  console.log(services)
 
-  services.forEach(service => {
+  services?.forEach(service => {
       // Generate days range considering recurrenceDays and availableSlotsPerDay
       const daysRange = generateDaysRange(service.availableFrom, service.availableTo, service.maxSlots, service.recurrenceDays, service.availableSlotsPerDay);
       Object.entries(daysRange).forEach(([date, availableSlots]) => {

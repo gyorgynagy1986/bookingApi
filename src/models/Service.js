@@ -13,6 +13,7 @@ const serviceSchema = new Schema({
   recurrence: { type: Boolean, default: true, required: true },
   recurrenceDays: [{ type: Number }], // Új mező: a hét napjai (0 = vasárnap, 1 = hétfő, stb.)
   visible: { type: Boolean, default: true, required: true },
+  companyName: { type: String, required: true, unique: false }, // Új mező a cégnév számára
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",

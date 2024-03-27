@@ -3,10 +3,10 @@
 import React, {useState} from 'react';
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import { useBookings } from '@/context/bookingContext'; // Feltételezve, hogy a BookingContext fájlodban van definiálva
+import { useBookings } from '@/context/bookingContext'; 
 import useCalendarEvents from '@/hooks/useCalendarEvents';
-// import useCalendarEventsrecurrenceFalse from '@/hooks/reccuranceFalse';
-import EventModal from './modals/Modal';
+import useSWR, { mutate } from 'swr';
+import EventModal from '@/components/modals/Modal';
 import 'moment-timezone' 
 
 // CSS for calendar
@@ -17,13 +17,13 @@ import "moment/locale/hu";
  import useEventStyles from "@/hooks/calendarEventColorHandler";
  import useCustomEventComponents from '@/hooks/managedCalendarDataInWeekAndDayView';
 
- moment.tz.setDefault()
-
+// Localizer
+moment.tz.setDefault()
 const localizer = momentLocalizer(moment)
 
 const CalendarUi = () => {
-  
-  const { services, fullyBookedDays, editData } = useBookings()
+
+const {fullyBookedDays, calendar} = useBookings()
 
   // Modal States
   const [modalOpen, setModalOpen] = useState(false);
@@ -39,10 +39,14 @@ const CalendarUi = () => {
     setModalOpen(false);
   };
   
+  
   // Az események és teljesen lefoglalt napok kiszámítása a kontextusból származó adatok alapján
-  const events = useCalendarEvents(services, editData);
-  const eventPropGetter = useEventStyles(fullyBookedDays, services);
+  const events = useCalendarEvents(calendar);
+  const eventPropGetter = useEventStyles(fullyBookedDays, calendar);
   const customComponents = useCustomEventComponents();
+
+ // if (!service) return <div>Loading...</div>
+ // if (erviceError) return <div>error...</div>
       
   return (
     <div className='calContainer'>

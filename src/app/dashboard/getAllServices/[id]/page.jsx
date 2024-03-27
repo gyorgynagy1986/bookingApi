@@ -9,6 +9,7 @@ const fetcher = (...args) => fetch(...args).then(res => res.json());
 
 const ServiceEditPage = ({ params }) => {
   const { id } = params;
+  
   const { data: fetchedService, error } = useSWR(`/api/services/${id}`, fetcher);
   const [service, setService] = useState({
     name: '',
