@@ -10,7 +10,6 @@ const fetcher = (...args) => fetch(...args).then(res => res.json());
 
 export const BookingProvider = ({ children }) => {
     const session = useSession()
-
     // Az SWR hook használata a szolgáltatások és teljesen lefoglalt napok lekérdezéséhez
     const { data: servicesData, error: servicesError } = useSWR("/api/services", fetcher);
     const { data: fullyBookedDaysData, error: fullyBookedDaysError } = useSWR("/api/getFullyBookedDays", fetcher);

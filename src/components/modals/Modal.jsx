@@ -1,7 +1,6 @@
-import React, {useContext} from 'react';
 import moment from 'moment';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import ReservationButton from '@/components/dashboard/postAnAppoitement/postAnAppoitement'
+import ReservationButton from '@/components/dashboard/(user)/postAnAppoitement/postAnAppoitement'
 
 function EventModal({ open, onClose, event }) {
 

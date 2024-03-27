@@ -11,8 +11,12 @@ const fetcher = (...args) => fetch(...args).then(res => res.json());
 const GetMyAppoitements = () => {
   
   const { userSession } = useBookings() 
+  const { _id } = userSession;
+  const id = _id;
   
-  const { data, error } = useSWR(`/api/appointments/${userSession?._id}`, fetcher);
+  const { data, error } = useSWR(`/api/appointments/${id}`, fetcher);
+
+  console.log(data)
 
   const [selectedService, setSelectedService] = useState(null);
 
@@ -20,7 +24,11 @@ const GetMyAppoitements = () => {
     try {
         await fetch(`/api/appointments/${id}`, { method: 'DELETE' });
         // Manually revalidate the data after deletion
-        mutate(`/api/appointments/${userSession?._id}`);
+        mutate(`/api/appointments/${userSession?._id}`, async (data) => ({
+          ...data,
+          // Feltételezve, hogy az adatok egy tömböt tartalmaznak
+          data: data.data.filter(appointment => appointment._id !== id)
+        }), false);
     } catch (error) {
         console.error('Error deleting appointment:', error);
         alert('Hiba történt a törlés során.');
@@ -70,6 +78,3 @@ const GetMyAppoitements = () => {
 };
 
 export default GetMyAppoitements;
-
-
-
